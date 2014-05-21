@@ -1,0 +1,199 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.List;
+import java.util.Scanner;
+
+class Card {
+	
+	int name;
+	int suit;
+}
+
+public class WarCardsGame {
+	
+	public static String spades = "\u2660";
+	public static String diamonds = "\u2666";
+	public static String hearts = "\u2665";
+	public static String clubs = "\u2663";
+	
+	public static void PrintCard(int cardName, int cardSuit) {
+		
+		String output = "";
+		
+		switch (cardName) {
+			case 11:
+				output = "J";
+				break;
+			case 12:
+				output = "Q";
+				break;
+			case 13:
+				output = "K";
+				break;
+			case 14:
+				output = "A";
+				break;
+	
+			default:
+				output = Integer.toString(cardName);
+				break;
+		}
+	
+		switch (cardSuit) {
+			case 0:
+				output = output + " " + spades;
+				break;
+			case 1:
+				output = output + " " + diamonds;
+				break;
+			case 2:
+				output = output + " " + hearts;
+				break;
+			case 3:
+				output = output + " " + clubs;
+				break;
+	
+			default:
+				break;
+		}
+		
+		System.out.println(output);
+	}
+
+	public static void main(String[] args) throws IOException {
+		
+		Locale.setDefault(Locale.ROOT);	
+ 
+		List<Card> startDeck = new ArrayList<Card>();
+		List<Card> playerDeck = new ArrayList<Card>();
+		List<Card> botDeck = new ArrayList<Card>();
+		
+		for (int i = 2; i <= 14; i++) {
+			
+			for (int j = 0; j < 4; j++) {
+				
+				Card newCard = new Card();
+				newCard.name = i;
+				newCard.suit = j;
+				startDeck.add(newCard);
+			}
+		}
+		
+		for (int i = 0; i < startDeck.size(); i++) {
+			
+			if (i % 2 == 0) {
+				
+				playerDeck.add(startDeck.get(i));
+			}
+			
+			else {
+				
+				botDeck.add(startDeck.get(i));
+			}
+		}
+		
+		do {
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			br.readLine();
+						
+			Card playerLastCard = new Card();
+			playerLastCard.name = playerDeck.get(playerDeck.size() - 1).name;
+			playerLastCard.suit = playerDeck.get(playerDeck.size() - 1).suit;
+			
+			Card botLastCard = new Card();
+			botLastCard.name = botDeck.get(botDeck.size() - 1).name;
+			botLastCard.suit = botDeck.get(botDeck.size() - 1).suit;
+			
+			System.out.print("Player: ");PrintCard(playerLastCard.name, playerLastCard.suit);
+			System.out.print("Bot: ");PrintCard(botLastCard.name, botLastCard.suit);
+			
+			List<Card> warDeck = new ArrayList<Card>();
+			warDeck.add(playerLastCard);
+			warDeck.add(botLastCard);
+			playerDeck.remove(playerDeck.size() - 1);
+			botDeck.remove(botDeck.size() - 1);
+			
+			if (playerLastCard.name > botLastCard.name) {
+				
+				System.out.println("You win!");
+			}
+			
+			if (playerLastCard.name < botLastCard.name) {
+				
+				System.out.println("Computer wins!");
+			}
+			
+			if (playerLastCard.name == botLastCard.name) {
+				
+				System.out.println("War!");
+				
+//				System.out.println();
+//				
+//				for (Card card : warDeck) {
+//					
+//					PrintCard(card.name, card.suit);
+//				}
+//				
+//				System.out.println();
+//				
+//				for (Card card : playerDeck) {
+//					
+//					PrintCard(card.name, card.suit);
+//				}
+//				
+//				System.out.println();
+//				
+//				for (Card card : botDeck) {
+//					
+//					PrintCard(card.name, card.suit);
+//				}
+				
+				while (playerLastCard.name == botLastCard.name) {
+					
+					for (int j = 0; j < 3; j++) {
+						
+						System.out.println();
+						
+						System.out.print("Player: ");PrintCard(playerDeck.get(playerDeck.size() - 1).name, playerDeck.get(playerDeck.size() - 1).suit);
+						System.out.print("Bot: ");PrintCard(botDeck.get(botDeck.size() - 1).name, botDeck.get(botDeck.size() - 1).suit);
+						
+						warDeck.add(playerDeck.get(playerDeck.size() - 1));
+						warDeck.add(botDeck.get(botDeck.size() - 1));
+						playerDeck.remove(playerDeck.size() - 1);
+						botDeck.remove(botDeck.size() - 1);
+										
+						if (j == 2) {
+							
+							playerLastCard.name = playerDeck.get(playerDeck.size() - 1).name;
+							playerLastCard.suit = playerDeck.get(playerDeck.size() - 1).suit;
+							
+							botLastCard.name = botDeck.get(botDeck.size() - 1).name;
+							botLastCard.suit = botDeck.get(botDeck.size() - 1).suit;
+							
+							if (playerLastCard.name > botLastCard.name) {
+								
+								System.out.println("You win!");
+							}
+							
+							if (playerLastCard.name < botLastCard.name) {
+								
+								System.out.println("Computer wins!");
+							}
+							
+							if (playerLastCard.name == botLastCard.name) {
+								
+								System.out.println("War!");
+								br.readLine();
+							}
+						}
+					}
+				}
+			}
+			
+		} while (true);
+	}
+}
